@@ -2,23 +2,36 @@ package lika.java;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class ControleDados {
+public class ControleDados implements Serializable {
 
-    public static void salvarProdutos(ArrayList<Produto> produtos, String arquivo) {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(arquivo))) {
+    // Método para salvar produtos em um arquivo
+    public static void salvarProdutos(ArrayList<Produto> produtos, String nomeArquivo) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
             outputStream.writeObject(produtos);
+            System.out.println("Dados salvos com sucesso!");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Erro ao salvar dados: " + e.getMessage());
         }
     }
 
     public static ArrayList<Produto> carregarProdutos(String arquivo) {
-        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(arquivo))) {
-            return (ArrayList<Produto>) inputStream.readObject();
+        ArrayList<Produto> produtos = new ArrayList<>();
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
+            Object obj = ois.readObject();
+
+            if (obj instanceof ArrayList<?>) {
+                produtos = (ArrayList<Produto>) obj;
+            } else {
+                // Trate o caso em que o objeto lido não é um ArrayList<Produto>
+                System.err.println("Erro: O objeto lido não é um ArrayList<Produto>.");
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            return new ArrayList<>(); // Retorna uma lista vazia em caso de erro
         }
+
+        return produtos;
     }
 }

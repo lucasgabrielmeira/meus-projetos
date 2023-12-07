@@ -1,6 +1,5 @@
 package lika.java;
 
-
 import java.io.Serializable;
 
 public class Produto implements Serializable {
@@ -99,5 +98,25 @@ public class Produto implements Serializable {
     @Override
     public int hashCode() {
         return codigo;
+    }
+        public void adicionarQuantidade(int quantidade) {
+        this.quantidadeEstoque += quantidade;
+    }
+
+    public void removerQuantidade(int quantidade) {
+        if (quantidade <= this.quantidadeEstoque) {
+            this.quantidadeEstoque -= quantidade;
+        } else {
+            System.out.println("Quantidade a ser removida maior que a quantidade em estoque.");
+        }
+    }
+  
+    public void aumentarEstoque(int quantidade) {
+        this.quantidadeEstoque += quantidade;
+    }
+
+    // Método para diminuir a quantidade em estoque
+    public void diminuirEstoque(int quantidade) {
+        this.quantidadeEstoque -= quantidade;
     }
 }
